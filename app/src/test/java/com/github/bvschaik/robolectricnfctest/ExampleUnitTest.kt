@@ -1,17 +1,24 @@
 package com.github.bvschaik.robolectricnfctest
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.nfc.NfcAdapter
+import androidx.test.core.app.ApplicationProvider
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows
 
-import org.junit.Assert.*
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+@RunWith(RobolectricTestRunner::class)
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun `Getting default NFC adapter should return non-null object`() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        Shadows.shadowOf(context.packageManager).setSystemFeature(PackageManager.FEATURE_NFC, true)
+
+        assertNotNull(NfcAdapter.getDefaultAdapter(ApplicationProvider.getApplicationContext())) // returns adapter
+        assertNotNull(NfcAdapter.getDefaultAdapter(ApplicationProvider.getApplicationContext())) // returns NULL on API 34!
+        assertNotNull(NfcAdapter.getDefaultAdapter(ApplicationProvider.getApplicationContext())) // returns adapter
     }
 }
